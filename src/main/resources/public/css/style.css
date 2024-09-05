@@ -1,0 +1,38 @@
+/* Basic reset for table styling */
+table {
+    width: 100%; /* Full width of the container */
+    border-collapse: collapse; /* Removes space between borders */
+    margin: 20px 0; /* Add some margin around the table */
+    font-family: Arial, sans-serif; /* Sets a nice readable font */
+    font-size: 0.9em; /* Adjusts the font size */
+    border-radius: 5px; /* Optional: rounds the corners */
+    overflow: hidden; /* Clips the content to fit the border radius */
+    box-shadow: 0 0 20px rgba(0,0,0,0.15); /* Soft shadow around the table */
+}
+
+/* Styling for table headers */
+th, td {
+    padding: 12px 15px; /* Spacing inside each cell */
+    text-align: left; /* Aligns text to the left */
+    border-bottom: 1px solid #dddddd; /* Adds a border to the bottom of each cell */
+}
+
+/* Header-specific styles */
+th {
+    background-color: #009879; /* Sets a green background for headers */
+    color: #ffffff; /* White text color for readability */
+}
+
+/* Hover effect for rows */
+tr:hover {
+    background-color: #f3f3f3; /* Light grey background on hover */
+}
+
+/* Styling for alternating row colors */
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Slightly different grey for even rows */
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff; /* White background for odd rows */
+}

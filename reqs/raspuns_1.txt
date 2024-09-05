@@ -1,0 +1,21 @@
+SELECT COUNT(DISTINCT numar_comanda)
+FROM comenzi
+INNER JOIN cantitati ON comenzi.id_cantitate = cantitati.id_cantitate
+WHERE cantitati.cantitate < 0;
+
+
+=>402
+
+
+
+SELECT COUNT(DISTINCT comenzi.numar_comanda) AS total_comenzi
+FROM comenzi
+INNER JOIN cantitati ON comenzi.id_cantitate = cantitati.id_cantitate
+INNER JOIN sucursale ON sucursale.numar_comanda = comenzi.numar_comanda
+INNER JOIN `data` ON `data`.numar_factura = comenzi.numar_factura
+WHERE cantitati.cantitate < 0 
+AND sucursale.sucursala = 'Bragadiru'
+AND `data`.`data` BETWEEN '2024-01-01' AND '2024-01-31';
+
+
+=>17
