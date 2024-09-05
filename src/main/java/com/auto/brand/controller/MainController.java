@@ -4,6 +4,8 @@
  */
 package com.auto.brand.controller;
 
+import com.auto.brand.model.Comenzi;
+import com.auto.brand.service.ComenziService;
 import com.auto.brand.service.data_processing.CsvProcessingContext;
 import com.auto.brand.service.pdf.InvoiceExtract;
 import com.auto.brand.service.pdf.dto.Invoice;
@@ -15,6 +17,7 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ public class MainController {
 
     @Autowired
     private CsvProcessingContext context;
+    
+    @Autowired
+    private ComenziService comenziService;
 
     @GetMapping("/init")
     public String init() {
@@ -117,6 +123,37 @@ public class MainController {
                     .build();
 
             writer.write(invoice.items);
+        } catch (Exception ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @PostMapping(value = "/scraper/sql")
+    public void sqlSearch(HttpServletResponse response, @RequestParam("file") MultipartFile file) {
+
+        response.setContentType("text/csv");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"articles.csv\"");
+
+        InputStream pdfInputStream = null;
+        try {
+            pdfInputStream = file.getInputStream();
+        } catch (IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        InvoiceExtract ie = new InvoiceExtract();
+        Invoice invoice = ie.process(pdfInputStream);
+        String invoiceNumber = invoice.numarFactura;
+        
+        List<Comenzi> comenzi = comenziService.findByNumarFactura(invoiceNumber);
+
+        try {
+            StatefulBeanToCsv<Comenzi> writer = new StatefulBeanToCsvBuilder<Comenzi>(response.getWriter())
+                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER) // Do not quote fields
+                    .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
+                    .build();
+
+            writer.write(comenzi);
         } catch (Exception ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
